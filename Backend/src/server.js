@@ -17,6 +17,8 @@ const uploadRoutes = require('./routes/upload');
 const tagRoutes = require('./routes/tags');
 const settingsRoutes = require('./routes/settings');
 
+import { keepAlive } from './utils/keepAlive'; // <-- NEW
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -42,6 +44,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Default route
+app.get('/', (_req, res) => {
+  res.send('Backend is running ✅');
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -85,3 +92,6 @@ app.listen(PORT, () => {
   console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5174'}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
+
+// Start keep-alive pinging
+keepAlive(); // <-- NEW
