@@ -35,14 +35,31 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // CORS configuration
+const allowedOrigins = [
+  'https://ownwrites.netlify.app',
+  'https://ownwrites.com',
+  'http://ownwrites.com',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174'
+];
+
 app.use(cors({
-  origin: [
-    'https://ownwrites.netlify.app',  // Your frontend URL
-    'http://localhost:3000'           // For local development
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      console.log('CORS blocked for origin:', origin);
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Total-Count']
 }));
 
 // Default route
