@@ -20,6 +20,9 @@ const settingsRoutes = require('./routes/settings');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Trust first proxy (needed for rate limiting behind proxy)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 
@@ -34,9 +37,8 @@ app.use('/api/', limiter);
 // CORS configuration
 app.use(cors({
   origin: [
-    'http://localhost:3000',
-    'http://localhost:5174',
-    process.env.FRONTEND_URL || 'http://localhost:3000'
+    'https://ownwrites.netlify.app',  // Your frontend URL
+    'http://localhost:3000'           // For local development
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
