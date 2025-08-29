@@ -171,24 +171,30 @@ router.post('/verify-email', authenticateToken, async (req, res) => {
 
 // Google OAuth login
 router.get('/google', (req, res) => {
-  const redirectUri = `${process.env.SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(process.env.FRONTEND_URL + '/auth/callback')}`;
+  // Get the original URL or use the default FRONTEND_URL
+  const frontendUrl = req.headers.referer || process.env.FRONTEND_URL || 'http://localhost:3000';
+  const callbackUrl = new URL('/api/auth/google/callback', process.env.BACKEND_URL || 'http://localhost:5001');
+  
+  const redirectUri = `${process.env.SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(callbackUrl.toString())}`;
   res.redirect(redirectUri);
 });
 
 // Google OAuth callback
 router.get('/google/callback', async (req, res) => {
   try {
-    const { access_token, refresh_token } = req.query;
+    const { access_token, refresh_token, error: oauthError } = req.query;
     
-    if (!access_token) {
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+    if (oauthError || !access_token) {
+      console.error('OAuth error:', oauthError || 'No access token provided');
+      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login?error=oauth_failed`);
     }
 
     // Get user info from Supabase
-    const { data: { user }, error } = await supabase.auth.getUser(access_token);
+    const { data: { user }, error: userError } = await supabase.auth.getUser(access_token);
     
-    if (error || !user) {
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+    if (userError || !user) {
+      console.error('Error getting user from Supabase:', userError);
+      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login?error=oauth_failed`);
     }
 
     // Check if user exists in our database
