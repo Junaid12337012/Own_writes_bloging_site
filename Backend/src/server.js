@@ -15,9 +15,7 @@ const contactRoutes = require('./routes/contact');
 const pageRoutes = require('./routes/pages');
 const uploadRoutes = require('./routes/upload');
 const tagRoutes = require('./routes/tags');
-const settingsRoutes = require('./routes/settings');
-
-import { keepAlive } from './keepAlive'; // <-- NEW
+const settingsRoutes = require('./routes/settings')
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -92,6 +90,3 @@ app.listen(PORT, () => {
   console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5174'}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
-
-// Start keep-alive pinging
-keepAlive(); // <-- NEW
