@@ -17,7 +17,7 @@ const uploadRoutes = require('./routes/upload');
 const tagRoutes = require('./routes/tags');
 const settingsRoutes = require('./routes/settings');
 
-import { keepAlive } from './utils/keepAlive'; // <-- NEW
+import { keepAlive } from './keepAlive'; // <-- NEW
 
 const app = express();
 const PORT = process.env.PORT || 5001;
