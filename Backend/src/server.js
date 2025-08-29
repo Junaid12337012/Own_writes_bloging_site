@@ -15,7 +15,7 @@ const contactRoutes = require('./routes/contact');
 const pageRoutes = require('./routes/pages');
 const uploadRoutes = require('./routes/upload');
 const tagRoutes = require('./routes/tags');
-const settingsRoutes = require('./routes/settings');
+const settingsRoutes = require('./routes/settings')
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -44,6 +44,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Default route
+app.get('/', (_req, res) => {
+  res.send('Backend is running ✅');
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
