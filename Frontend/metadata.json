@@ -1,0 +1,5 @@
+{
+  "name": "OwnWrites - Modern Blogging Platform",
+  "description": "A modern, responsive, and feature-rich blogging website frontend built with React, TypeScript, and Tailwind CSS. It features a clean design, dark/light themes, an AI Story Writer, and smooth animations to provide an excellent user experience for readers and writers.",
+  "requestFramePermissions": []
+}
